@@ -2,22 +2,22 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"context"
+	"crypto/tls"
+	"encoding/json"
+	"fmt"
+	"github.com/aws/aws-lambda-go/lambda"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"strings"
-	"github.com/aws/aws-lambda-go/lambda"
-	"net/http"
-	"io/ioutil"
-	"encoding/json"
-	"crypto/tls"
 )
 
 type record struct {
 	S3 struct {
 		Bucket struct {
 			Name string `json:"name"`
-			ARN string `json:"arn"`
+			ARN  string `json:"arn"`
 		} `json:"bucket"`
 		Object struct {
 			Key string `json:"key"`
@@ -30,8 +30,8 @@ type s3Event struct {
 }
 
 type webhookResponse struct {
-	EventProcessed bool `json:"eventProcessed"`
-	EventID string `json:"eventId"`
+	EventProcessed bool   `json:"eventProcessed"`
+	EventID        string `json:"eventId"`
 }
 
 type parameterBody struct {
@@ -64,7 +64,7 @@ func handleRequest(ctx context.Context, event s3Event) (string, error) {
 	if err != nil {
 		panic(err)
 	}
-	
+
 	// Make the request
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	req.Header.Set("Content-Type", "application/json")
