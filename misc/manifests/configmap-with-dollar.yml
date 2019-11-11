@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  hello: '${MY_VARIABLE}'
+kind: ConfigMap
+metadata:
+  name: test-configmap
+  namespace: default
